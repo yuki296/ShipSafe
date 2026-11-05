@@ -1,44 +1,19 @@
-
-/**
- * OSV API로 특정 패키지 버전의 알려진 취약점을 조회한다.
- *
- * @param {string} ecosystem - 패키지 생태계
- * @param {string} name - 패키지 이름
- * @param {string} version - 패키지 버전
- * @returns {Promise<object[]>} 취약점 목록
- */
-export async function getOSVVulnerabilities(
-  ecosystem,
-  name,
-  version
-) {
-  const response = await fetch(
-    "https://api.osv.dev/v1/query",
-    {
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json",
-      },
-
-      body: JSON.stringify({
-        version,
-        package: {
-          name,
-          ecosystem,
-        },
-      }),
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error(
-      `OSV HTTP 오류: ${response.status}`
-    );
-  }
-
-  const data = await response.json();
-
-  // 알려진 취약점이 반환되지 않으면 빈 배열 사용
+import { requestJSON } from '../utils/http.js';
+const object = (value) => value && typeof value === 'object' && !Array.isArray(value);
+const optionalArray = (value, valid) => value === undefined || (Array.isArray(value) && value.every(valid));
+function validVulnerability(row) {
+  return object(row) && typeof row.id === 'string' &&
+    ['summary','details'].every((key) => row[key] === undefined || typeof row[key] === 'string') &&
+    optionalArray(row.aliases, (id) => typeof id === 'string') &&
+    optionalArray(row.references, (ref) => object(ref) && typeof ref.url === 'string') &&
+    optionalArray(row.affected, (affected) => object(affected) && (!affected.package || (object(affected.package) && ['name','ecosystem'].every((key) => typeof affected.package[key] === 'string'))) &&
+      optionalArray(affected.versions, (v) => typeof v === 'string') && optionalArray(affected.ranges, (range) => object(range) && typeof range.type === 'string' && optionalArray(range.events, (event) => object(event) && Object.values(event).every((v) => typeof v === 'string'))));
+}
+export async function getOSVVulnerabilities(ecosystem, name, version) {
+  const data = await requestJSON('https://api.osv.dev/v1/query', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ version, package: { name, ecosystem } }),
+  }, 'OSV', 20000);
+  if (data.error || (data.vulns !== undefined && !Array.isArray(data.vulns)) || data.vulns?.some((row) => !validVulnerability(row))) throw new Error('OSV 응답 형식이 올바르지 않습니다.');
   return data.vulns ?? [];
 }

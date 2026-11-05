@@ -27,15 +27,30 @@ async function request(path, hostname) {
   return data;
 }
 
+function validateScan(scan) {
+  if (!scan || typeof scan !== 'object' || !/^(A[+-]?|B[+-]?|C[+-]?|D[+-]?|F)$/.test(scan.grade) || typeof scan.score !== 'number' || !Number.isFinite(scan.score)) throw new Error('Mozilla 평가 결과 형식이 올바르지 않습니다.');
+  return scan;
+}
+function normalizeTests(tests) {
+  if (!tests || typeof tests !== 'object' || Array.isArray(tests)) return {};
+  return Object.fromEntries(Object.entries(tests).filter(([, test]) => test && typeof test === 'object' && !Array.isArray(test)).map(([key, test]) => [key, {
+    pass: typeof test.pass === 'boolean' ? test.pass : null,
+    result: typeof test.result === 'string' ? test.result : '',
+    title: typeof test.title === 'string' ? test.title : key,
+    score_modifier: typeof test.score_modifier === 'number' && Number.isFinite(test.score_modifier) ? test.score_modifier : null,
+    score_description: typeof test.score_description === 'string' ? test.score_description : '',
+    recommendation: typeof test.recommendation === 'string' ? test.recommendation : '',
+  }]));
+}
 export async function getMozillaScan(hostname) {
   try {
     const data = await request("analyze", hostname);
     if (!data.scan || typeof data.scan !== "object") throw new Error("Mozilla 상세 응답 형식이 올바르지 않습니다.");
-    return { ...data.scan, tests: data.tests && typeof data.tests === "object" ? data.tests : {}, hostname };
+    return { ...validateScan(data.scan), tests: normalizeTests(data.tests), hostname };
   } catch (error) {
     // 상세 API를 지원하지 않는 경우 기존 요약 검사는 유지한다.
     if (![404, 405].includes(error.status)) throw error;
     const data = await request("scan", hostname);
-    return { ...data, tests: {}, hostname, detailUnavailable: true };
+    return { ...validateScan(data), tests: {}, hostname, detailUnavailable: true };
   }
 }
