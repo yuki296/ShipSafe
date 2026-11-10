@@ -36,7 +36,7 @@ export default function ScanList({ history }) {
   const [filters, setFilters] = useState({ query: '', type: 'all', start: '', end: '', sort: 'newest' });
   const filtered = useMemo(() => selectHistory(history.records, filters), [history.records, filters]);
   function field(key) { return (event) => setFilters((prev) => ({ ...prev, [key]: event.target.value })); }
-  return <section aria-labelledby="history-title"><h2 id="history-title">검사 목록</h2>
+  return <section aria-labelledby="history-title"><h2 id="history-title">검사 이력</h2>
     <p className="source-text">웹사이트·라이브러리 총 {MAX_HISTORY}개 / 최대 200KiB. 한도를 넘으면 오래된 기록부터 제외합니다. 결과는 검사 시점의 공개 정보이며 현재 상태를 보장하지 않습니다. 이 브라우저에만 저장됩니다.</p>
     {history.warning && <p role="alert">{history.warning}</p>}
     <div className="history-filters">

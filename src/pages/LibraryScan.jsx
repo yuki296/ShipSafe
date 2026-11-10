@@ -6,10 +6,10 @@ import { getSeverity } from "../utils/severity.js";
 
 const ecosystems = ["Maven", "npm", "PyPI", "Go", "crates.io", "RubyGems", "NuGet", "Packagist"];
 
-export default function LibraryScan({ onRecord }) {
-  const [ecosystem, setEcosystem] = useState("Maven");
-  const [packageName, setPackageName] = useState("");
-  const [version, setVersion] = useState("");
+export default function LibraryScan({ onRecord, initialTarget = null }) {
+  const [ecosystem, setEcosystem] = useState(initialTarget?.ecosystem || "Maven");
+  const [packageName, setPackageName] = useState(initialTarget?.packageName || "");
+  const [version, setVersion] = useState(initialTarget?.version || "");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -39,7 +39,8 @@ export default function LibraryScan({ onRecord }) {
         version: packageVersion,
         vulnerabilityCount: vulnerabilities.length,
         scannedAt: new Date().toISOString(),
-        snapshot: { scope: "OSV 패키지·버전 일치 조회 요약", vulnerabilities: vulnerabilities.map((vuln) => ({ id: vuln.id, severity: getSeverity(vuln.database_specific?.severity) })) },
+        snapshot: { scope: "OSV 패키지·버전 일치 조회 요약", vulnerabilities: vulnerabilities.map((vuln) =>
+          ({ id: vuln.id, severity: getSeverity(vuln.database_specific?.severity) })) },
       });
     } catch (scanError) {
       setError(`OSV 조회 실패: ${scanError.message}`);
@@ -52,6 +53,7 @@ export default function LibraryScan({ onRecord }) {
   return (
     <section aria-labelledby="library-scan-title">
       <h2 id="library-scan-title">라이브러리 취약점 검사</h2>
+      {initialTarget && <p className="source-text">‘{initialTarget.name}’ 대상을 불러왔습니다. 입력값을 확인하고 라이브러리 검사 버튼을 눌러 주세요.</p>}
       <form onSubmit={handleScan}>
         <fieldset disabled={loading}>
           <legend>검사할 패키지</legend>

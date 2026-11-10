@@ -1,3 +1,4 @@
+import { OBSERVATORY_GROUPS, getTestPresentation } from "../utils/observatoryPresentation.js";
 import { getHttpRisk } from "../utils/riskGuidance.js";
 import Icon from "./Icon.jsx";
 import IPResultCard from "./IPResultCard.jsx";
@@ -51,29 +52,36 @@ export function MozillaExplanation({ result, error }) {
   return <section className="panel explanation-panel" aria-labelledby="mozilla-reason-title">
     <h2 id="mozilla-reason-title"><Icon name="shield" />Mozilla · 왜 이 결과가 나왔나요?</h2>
     {error ? <div className="explanation-body" role="alert"><h3>검사를 완료하지 못했어요</h3><p>{error.message}</p>{error.detail && <p className="source-text">응답 근거: {String(error.detail)}</p>}<p>연결 실패는 보안 등급이 낮다는 뜻이 아닙니다. 등급을 판단할 결과가 없는 상태입니다.</p></div> : <div className="explanation-body">
-      <div className="reason-overview"><strong className="grade-display">{result.grade ?? "—"}</strong><div><h3>{result.hostname} · {result.score ?? "미확인"}점</h3><p>통과 {result.tests_passed ?? "미확인"}개 / 실패 {result.tests_failed ?? "미확인"}개</p><small>HTTP 보안 설정 평가입니다. 사이트 전체의 안전성이나 해킹 여부를 판정하는 점수는 아닙니다.</small></div></div>
+      <div className="reason-overview"><strong className="grade-display">{result.grade ?? "—"}</strong><div><h3>{result.hostname} · {result.score ?? "미확인"}점</h3><p>Mozilla 집계: 통과 {result.tests_passed ?? "미확인"}개 / 실패 {result.tests_failed ?? "미확인"}개</p><small>HTTP 보안 설정 평가입니다. 사이트 전체의 안전성이나 해킹 여부를 판정하는 점수는 아닙니다.</small></div></div>
       {tests.length > 0 && tests.every(([, test]) => typeof test.score_modifier === "number") && 100 + tests.reduce((sum, [, test]) => sum + test.score_modifier, 0) === result.score && <p className="score-formula">점수 근거: 기본 100점 {tests.filter(([, test]) => test.score_modifier !== 0).map(([, test]) => `${test.score_modifier > 0 ? "+" : "−"} ${Math.abs(test.score_modifier)}`).join(" ")} = {result.score}점</p>}
       <p>먼저 ‘개선 권장’ 항목을 확인하세요. 각 항목에 지금 상태와 걱정되는 상황을 쉽게 적었어요.</p>
       <p className="source-text">이 결과는 웹 연결·브라우저 보호 설정을 살펴본 거예요. 실제 공격이나 정보 유출이 발생했는지는 검사하지 않았어요. 서버 설정 변경은 사이트 관리자가 진행해야 해요.</p>
       {result.scanned_at && <p className="source-text">검사 시각: {new Date(result.scanned_at).toLocaleString("ko-KR")} · 재검사 시 최근 결과가 반환될 수 있습니다.</p>}
       {tests.length === 0 && <p className="empty-explanation">항목별 상세 결과를 받지 못했습니다. 이 화면의 점수만으로 특정 헤더가 빠졌다고 판단하지 않습니다. Mozilla 원문에서 원인을 확인해 주세요.</p>}
-      {tests.map(([key, test]) => {
+      {OBSERVATORY_GROUPS.map((group) => {
+        const items = tests.filter(([key, test]) => getTestPresentation(key, test).group === group.id);
+        if (!items.length) return null;
+        return <section key={group.id} className={`check-group check-group-${group.id}`} aria-label={group.title}>
+          <h3>{group.title} <small lang="en">{group.english}</small><span>{items.length}개</span></h3><p>{group.description}</p>
+          {items.map(([key, test]) => {
         const topic = topics[key] || ["추가 보안 설정 확인하기", "Mozilla가 이 설정을 확인했어요.", "자세한 결과와 관리자용 원문을 확인하세요.", test.title || key];
         const passed = test.pass === true;
         const failed = test.pass === false;
-        const optionalMissing = ["coep-not-implemented", "coop-not-implemented"].includes(test.result) && !failed;
+        const presentation = getTestPresentation(key, test);
         const modifier = typeof test.score_modifier === "number" ? test.score_modifier : null;
-        return <details className="reason-item" key={key} open={failed}>
-          <summary><span className={`badge bilingual-status ${passed && !optionalMissing ? "success" : failed ? "warning" : ""}`}>{optionalMissing ? "선택 설정 없음" : passed ? "양호" : failed ? "개선 권장" : "판단하지 않음"}<small lang="en">{optionalMissing ? "Optional · Not configured" : passed ? "Passed" : failed ? "Needs Improvement" : "Not assessed"}</small></span><span className="test-heading"><strong>{topic[0]}</strong><small lang="en">{topic[4] || topic[3]}</small></span><span className="score-change">{modifier === null ? "점수 미제공" : modifier === 0 ? "점수 변화 없음" : `${modifier > 0 ? "+" : ""}${modifier}점`}</span></summary>
+        return <details className="reason-item" key={key} open={presentation.expanded}>
+          <summary><span className={`badge bilingual-status ${presentation.tone}`}>{presentation.label}<small lang="en">{presentation.english}</small></span><span className="test-heading"><strong>{topic[0]}</strong><small lang="en">{topic[4] || topic[3]}</small></span><span className="score-change">{modifier === null ? "점수 미제공" : modifier === 0 ? "점수 변화 없음" : `${modifier > 0 ? "+" : ""}${modifier}점`}</span></summary>
           <p className="plain-explainer">{topic[1]}</p>
           <div className="simple-result"><strong>지금 상태</strong><p>{reasons[test.result] || (passed ? "Mozilla 기준을 충족한 것으로 확인됐어요. 아래 관리자용 상세 정보에서 근거를 볼 수 있어요." : failed ? "Mozilla 권장 기준을 충족하지 못했어요. 아래 관리자용 상세 정보에서 정확한 이유를 확인하세요." : "이 항목은 좋고 나쁨을 판단하지 않았어요. 아래 상세 정보에서 이유를 확인하세요.")}</p></div>
-          {getHttpRisk(key, test) && <div className="risk-guidance"><h4>어떤 일이 생길 수 있나요?</h4><p>{getHttpRisk(key, test)}</p></div>}
+          {presentation.group === "improve" && getHttpRisk(key, test) && <div className="risk-guidance"><h4>어떤 일이 생길 수 있나요?</h4><p>{getHttpRisk(key, test)}</p></div>}
           <div className="simple-result"><strong>{failed ? "관리자는 이렇게 개선할 수 있어요" : "관리자가 확인할 내용"}</strong><p>{topic[2]}</p></div>
           <details className="technical-details"><summary>관리자용 상세 정보 · 용어와 원문</summary>
             <p><strong>기술 이름:</strong> {topic[3]}</p>
             <div className="source-text"><strong>Mozilla 실제 응답</strong><p>결과 코드: <code>{test.result || "미제공"}</code></p>{plainText(test.score_description) && <p>판정 근거: {plainText(test.score_description)}</p>}{plainText(test.recommendation) && <p>권고: {plainText(test.recommendation)}</p>}</div>
           </details>
         </details>;
+          })}
+        </section>;
       })}
       <a className="report-link" href={`https://developer.mozilla.org/en-US/observatory/analyze?host=${encodeURIComponent(result.hostname)}`} target="_blank" rel="noreferrer">Mozilla 전체 보고서에서 원문 확인 ↗</a>
     </div>}

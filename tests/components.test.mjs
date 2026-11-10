@@ -1,3 +1,4 @@
+import { OBSERVATORY_GROUPS, getTestPresentation } from '../src/utils/observatoryPresentation.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -10,7 +11,7 @@ import { getSeverity } from '../src/utils/severity.js';
 async function component(file, name, imports={}) {
   const source=readFileSync(new URL(`../src/components/${file}`,import.meta.url),'utf8')
     .replace(/^import .*;\n/gm,'').replace(/export default function /g,'function ').replace(/export function /g,'function ');
-  const ctx={React,getSeverity,getHttpRisk,getLibraryRisk,...imports};vm.createContext(ctx);
+  const ctx={React,OBSERVATORY_GROUPS,getTestPresentation,getSeverity,getHttpRisk,getLibraryRisk,...imports};vm.createContext(ctx);
   vm.runInContext((await transformWithOxc(source,file,{jsx:{runtime:'classic'}})).code,ctx);
   return ctx[name];
 }
@@ -52,4 +53,14 @@ test('plain-language results hide technical text and distinguish missing optiona
   const html=renderToStaticMarkup(React.createElement(Explain,{result:{hostname:'example.com',grade:'F',score:0,tests:{'x-content-type-options':{pass:false,result:'x-content-type-options-not-implemented',score_modifier:-5},'cross-origin-opener-policy':{pass:true,result:'coop-not-implemented',score_modifier:0}}}}));
   assert.match(html,/MIME 타입 스니핑 방지/);assert.match(html,/MIME Sniffing Protection/);assert.match(html,/Needs Improvement/);assert.match(html,/선택 설정 없음/);assert.match(html,/설정이 있다는 뜻은 아니에요/);
   assert.match(html,/<details class="technical-details">/);assert.doesNotMatch(html,/<details class="technical-details" open/);
+});
+
+test('HTTP checks separate optional settings from failed, passed and unassessed checks',()=>{
+  assert.equal(getTestPresentation('content-security-policy',{pass:false,result:'csp-not-implemented'}).group,'improve');
+  assert.equal(getTestPresentation('cross-origin-opener-policy',{pass:true,result:'coop-not-implemented'}).group,'optional');
+  assert.equal(getTestPresentation('cross-origin-embedder-policy',{pass:false,result:'coep-header-invalid'}).group,'optional');
+  assert.equal(getTestPresentation('cross-origin-resource-policy',{pass:null,result:'cross-origin-resource-policy-not-implemented'}).group,'optional');
+  assert.equal(getTestPresentation('cross-origin-resource-sharing',{pass:true,result:'cross-origin-resource-sharing-not-implemented'}).group,'reference');
+  assert.equal(getTestPresentation('cookies',{pass:null,result:'cookies-not-found'}).group,'reference');
+  assert.equal(getTestPresentation('subresource-integrity',{pass:true,result:'sri-implemented-and-all-scripts-integrity-protected'}).group,'passed');
 });

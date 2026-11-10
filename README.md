@@ -43,6 +43,12 @@ NVD는 API 키 없이 호출하며 최소 7초 간격·동시 1요청·10분 메
 
 Mozilla 실패 항목에는 설정 미흡이 어떤 조건에서 정보 노출·클릭 가로채기 등에 영향을 줄 수 있는지와 개선 방법을 표시합니다. 통과·해당 없음에는 실패 경고를 붙이지 않습니다. 라이브러리는 공식 Apache 권고를 확인한 Log4j CVE 4건만 구체적인 한국어 시나리오를 제공하며, 나머지 권고는 원문과 영향 조건 확인을 안내합니다. 심각도나 제목 키워드만으로 피해 유형을 생성하지 않습니다. Shodan CVE는 실제 악용 미검증 상태를 유지하고 CDN 결과를 원본 서버의 위험으로 바꾸지 않습니다. 설명은 실제 공격 성공이나 침해를 판정하지 않습니다.
 
+## 검사 대상 임시 목록
+
+검사 목록 메뉴의 ‘검사 대상’에서 웹사이트 또는 라이브러리를 미리 등록·조회·수정·삭제할 수 있습니다. 대상 이름·URL·도메인·패키지명 검색과 유형 필터를 지원합니다. ‘검사 화면 열기’는 입력값을 검사 화면에 전달하며, 실제 API 조회는 사용자가 해당 화면의 검사 버튼을 눌렀을 때 실행됩니다.
+
+임시 목록은 App의 React 상태에만 보관하며 최대 50개입니다. 메뉴를 이동해도 유지되지만 새로고침하면 초기화됩니다. localStorage·DB에는 저장하지 않습니다. 별도 ‘검사 이력’ 탭에서는 기존 localStorage 결과 요약을 확인합니다. 임시 대상을 수정·삭제해도 이미 저장된 검사 결과는 바뀌지 않습니다.
+
 ## 저장 정책
 
 `localStorage['shipsafe-history']`의 배열 구조를 유지합니다. 기존 라이브러리 요약을 읽으며 상세 데이터가 없는 구 이력도 조회할 수 있습니다. 총 20개/200KiB(문자열 UTF-16 크기 추정), 기록별 8KiB로 제한하고 오래된 기록부터 제외합니다. IP별 포트 50개·태그 10개·CVE 20개, OSV 권고 50개 등 일부 요약만 저장합니다. 원문·전체 세부 결과는 저장하지 않습니다.
@@ -61,7 +67,7 @@ Mozilla 실패 항목에는 설정 미흡이 어떤 조건에서 정보 노출·
 ## 구조
 
 ```text
-src/pages/       Dashboard, WebsiteScan, LibraryScan, ScanList, Guide
+src/pages/       WebsiteScan, LibraryScan, TargetList, ScanList, Guide
 src/components/ 기존 공통 UI, IPResultCard, VulnerabilityCard, ScanExplanation
 src/hooks/      useWebsiteScan, useScanHistory
 src/services/   DNS / Shodan / OSV / Observatory / 다중 IP orchestration
@@ -86,3 +92,5 @@ src/data/       공식 CDN 네트워크 목록 스냅샷
 - [OSV API](https://google.github.io/osv.dev/api/)
 - [소스 점검 및 범위](docs/v1-audit.md)
 - [v2.0 설계 초안 (미구현)](docs/v2-plan.md)
+
+- [QA 및 Test 기록·수동 테스트 양식](docs/qa-test-log.md)
