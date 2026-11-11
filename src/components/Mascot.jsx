@@ -1,5 +1,20 @@
-const images = { blue: "21 002", purple: "21 006", green: "21 005", group: "21 001", detective: "21 003", guard: "21 004" };
+// color 이름을 마스코트 이미지 파일에 연결합니다. 이미지 교체 시 images와 파일명을 확인합니다.
+const images = {
+  blue: "21 002",
+  purple: "21 006",
+  green: "21 005",
+  group: "21 001",
+  detective: "21 003",
+  guard: "21 004",
+};
 export default function Mascot({ color = "blue" }) {
   const filename = `KakaoTalk_Photo_2026-11-05-17-30-${images[color] || images.blue}.png`;
-  return <img className={`mascot mascot-${color}`} src={`/images/${encodeURIComponent(filename)}`} alt="" aria-hidden="true" />;
+  return (
+    <img
+      className={`mascot mascot-${color}`}
+      src={`/images/${encodeURIComponent(filename)}`}
+      alt=""
+      aria-hidden="true"
+    />
+  );
 }

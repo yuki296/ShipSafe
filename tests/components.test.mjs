@@ -10,7 +10,7 @@ import { getHttpRisk, getLibraryRisk } from '../src/utils/riskGuidance.js';
 import { getSeverity } from '../src/utils/severity.js';
 async function component(file, name, imports={}) {
   const source=readFileSync(new URL(`../src/components/${file}`,import.meta.url),'utf8')
-    .replace(/^import .*;\n/gm,'').replace(/export default function /g,'function ').replace(/export function /g,'function ');
+    .replace(/^import\s[\s\S]*?;\r?\n/gm,'').replace(/export default function /g,'function ').replace(/export function /g,'function ');
   const ctx={React,OBSERVATORY_GROUPS,getTestPresentation,getSeverity,getHttpRisk,getLibraryRisk,...imports};vm.createContext(ctx);
   vm.runInContext((await transformWithOxc(source,file,{jsx:{runtime:'classic'}})).code,ctx);
   return ctx[name];
