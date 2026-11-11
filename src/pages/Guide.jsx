@@ -3,7 +3,7 @@ export default function Guide() {
   return (
     <section className="panel guide">
       <h2>쉽게 시작하는 보안 점검</h2>
-      <p>궁금한 항목을 선택해 공개 보안 정보를 확인하세요.</p>
+      <p>항목을 선택하면 공개 보안 정보를 확인할 수 있습니다.</p>
       {[
         [
           "01",
@@ -13,12 +13,12 @@ export default function Guide() {
         [
           "02",
           "웹 보안 설정",
-          "Mozilla 검사로 HTTP 보안 설정의 등급과 점수를 확인합니다. 웹사이트 검사 화면의 웹 보안 설정 카드를 눌러주세요.",
+          "Mozilla 검사로 HTTP 보안 설정의 등급과 점수를 확인합니다. 웹사이트 검사 화면의 웹 보안 설정 카드를 누르면 확인할 수 있습니다.",
         ],
         [
           "03",
           "라이브러리 검사",
-          "Maven, npm, PyPI 등 생태계를 선택하고 정확한 패키지명과 버전을 입력하세요. Maven은 groupId:artifactId 형식입니다.",
+          "Maven, npm, PyPI 등 생태계를 선택하고 정확한 패키지명과 버전을 입력해야 합니다. Maven은 groupId:artifactId 형식입니다.",
         ],
         [
           "04",

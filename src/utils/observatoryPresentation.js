@@ -1,5 +1,5 @@
 export const OBSERVATORY_GROUPS = [
-  { id: 'improve', title: '개선 권장', english: 'Recommended Improvements', description: 'Mozilla 평가 기준에 미달한 설정입니다. 서비스 환경에 맞게 우선 점검하세요. 실제 공격이 확인됐다는 뜻은 아닙니다.' },
+  { id: 'improve', title: '개선 권장', english: 'Recommended Improvements', description: 'Mozilla 평가 기준에 미달한 설정입니다. 서비스 환경에 맞게 우선 점검해야 합니다. 실제 공격이 확인됐다는 뜻은 아닙니다.' },
   { id: 'optional', title: '선택적 추가 보호', english: 'Optional Protections', description: '서비스 기능과 호환성에 따라 선택하는 설정입니다. 모두 켜야 하는 필수 보안 항목은 아닙니다.' },
   { id: 'passed', title: '이번 평가 기준 충족', english: 'Passed Checks', description: '이 항목은 Mozilla 기준을 충족했습니다. 다른 항목이나 사이트 전체의 안전성을 보장하지는 않습니다.' },
   { id: 'reference', title: '참고 · 판단 보류', english: 'Reference / Not Assessed', description: '미사용·기본 정책·정보 부족 등으로 해석을 구분해야 하는 항목입니다. 안전 또는 취약으로 단정하지 않습니다.' },

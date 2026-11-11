@@ -21,7 +21,7 @@ export default function useWebsiteScan(addRecord) {
     try { hostname = getHostname(domain); }
     catch (error) { setStatus(error.message); return; }
     const key = `${kind}:${hostname}`;
-    if (Date.now() - (requests.current.get(key) || 0) < COOLDOWN) { setStatus('연속 요청을 줄이기 위해 같은 검사는 10초 후 다시 실행해 주세요.'); return; }
+    if (Date.now() - (requests.current.get(key) || 0) < COOLDOWN) { setStatus('연속 요청을 줄이기 위해 같은 검사는 10초 후 다시 실행할 수 있습니다.'); return; }
     requests.current.set(key, Date.now());
     if (requests.current.size > 40) requests.current.delete(requests.current.keys().next().value);
     lock.current = true;

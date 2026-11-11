@@ -5,7 +5,7 @@ let lastRequest = -Infinity;
 let pending = false;
 export function normalizeCveID(input) {
   const id = typeof input === 'string' ? input.trim().toUpperCase() : '';
-  if (!/^CVE-\d{4}-\d{4,}$/.test(id) || id.length > 40) throw new Error('CVE-연도-번호 형식으로 입력해 주세요.');
+  if (!/^CVE-\d{4}-\d{4,}$/.test(id) || id.length > 40) throw new Error('CVE-연도-번호 형식으로 입력해야 합니다.');
   return id;
 }
 export function parseCve(data, id) {
@@ -50,7 +50,7 @@ export async function getCveDetails(input) {
   const id = normalizeCveID(input);
   const saved = cache.get(id);
   if (saved && Date.now() - saved.at < 10 * 60 * 1000) return saved.value;
-  if (pending || Date.now() - lastRequest < 7000) throw new Error('NVD 요청 제한을 줄이기 위해 약 7초 후 다시 조회해 주세요.');
+  if (pending || Date.now() - lastRequest < 7000) throw new Error('NVD 요청 제한을 줄이기 위해 약 7초 후 다시 조회할 수 있습니다.');
   lastRequest = Date.now(); pending = true;
   try {
     const data = await requestJSON(`https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=${encodeURIComponent(id)}`, {}, 'NVD CVE', 20000);

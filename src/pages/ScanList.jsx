@@ -128,7 +128,7 @@ function HistoryItem({ record, onUpdate, onDelete }) {
             ))}
             <small>
               저장 용량을 위해 일부 항목과 전체 원문을 생략한 요약입니다. 최신 결과는 다시
-              검사하세요.
+              검사해야 합니다.
             </small>
           </div>
         )}
@@ -167,7 +167,7 @@ export default function ScanList({ history }) {
             type="search"
             value={filters.query}
             onChange={field("query")}
-            placeholder="이름·메모도 검색할 수 있어요"
+            placeholder="이름·메모도 검색할 수 있습니다"
           />
         </label>
         <label>

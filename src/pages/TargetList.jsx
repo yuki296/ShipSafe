@@ -197,7 +197,7 @@ export default function TargetList({ targets, onOpen }) {
         <p>
           {targets.records.length
             ? "검색 조건에 맞는 검사 대상이 없습니다."
-            : "등록된 검사 대상이 없습니다. 위에서 추가해 주세요."}
+            : "등록된 검사 대상이 없습니다. 위에서 추가할 수 있습니다."}
         </p>
       )}
     </section>

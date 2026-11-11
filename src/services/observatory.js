@@ -8,15 +8,15 @@ async function request(path, hostname) {
     });
   } catch (error) {
     throw new Error(error.name === "TimeoutError"
-      ? "Mozilla 응답 시간이 초과됐습니다. 잠시 후 다시 검사해 주세요."
-      : "Mozilla에 연결하지 못했습니다. 인터넷 연결, 브라우저의 요청 차단 또는 서비스 상태를 확인해 주세요. 정확한 원인은 현재 확인할 수 없습니다.", { cause: error });
+      ? "Mozilla 응답 시간이 초과됐습니다. 잠시 후 다시 검사할 수 있습니다."
+      : "Mozilla에 연결하지 못했습니다. 인터넷 연결, 브라우저의 요청 차단 또는 서비스 상태를 확인해야 합니다. 정확한 원인은 현재 확인할 수 없습니다.", { cause: error });
   }
   const data = await response.json().catch(() => ({}));
   if (!response.ok || data.error || data.scan?.error) {
     const explanations = {
-      422: "Mozilla가 대상에 연결하거나 주소를 해석하지 못했습니다. 도메인과 사이트의 공개 접근 가능 여부를 확인해 주세요.",
-      429: "요청이 많아 잠시 제한됐습니다. 잠시 후 다시 시도해 주세요.",
-      500: "Mozilla 서비스에서 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+      422: "Mozilla가 대상에 연결하거나 주소를 해석하지 못했습니다. 도메인과 사이트의 공개 접근 가능 여부를 확인해야 합니다.",
+      429: "요청이 많아 잠시 제한됐습니다. 잠시 후 다시 시도할 수 있습니다.",
+      500: "Mozilla 서비스에서 오류가 발생했습니다. 잠시 후 다시 시도할 수 있습니다.",
       503: "Mozilla 서비스를 일시적으로 사용할 수 없습니다.",
     };
     const error = new Error(explanations[response.status] || "Mozilla 검사를 완료하지 못했습니다.");

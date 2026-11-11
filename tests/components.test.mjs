@@ -51,7 +51,7 @@ test('specific advisory uses verified ID and preserves denial-of-service distinc
 test('plain-language results hide technical text and distinguish missing optional protection from installed protection',async()=>{
   const Explain=await component('ScanExplanation.jsx','MozillaExplanation',{Icon:()=>null,IPResultCard:()=>null});
   const html=renderToStaticMarkup(React.createElement(Explain,{result:{hostname:'example.com',grade:'F',score:0,tests:{'x-content-type-options':{pass:false,result:'x-content-type-options-not-implemented',score_modifier:-5},'cross-origin-opener-policy':{pass:true,result:'coop-not-implemented',score_modifier:0}}}}));
-  assert.match(html,/MIME 타입 스니핑 방지/);assert.match(html,/MIME Sniffing Protection/);assert.match(html,/Needs Improvement/);assert.match(html,/선택 설정 없음/);assert.match(html,/설정이 있다는 뜻은 아니에요/);
+  assert.match(html,/MIME 타입 스니핑 방지/);assert.match(html,/MIME Sniffing Protection/);assert.match(html,/Needs Improvement/);assert.match(html,/선택 설정 없음/);assert.match(html,/설정이 있다는 뜻은 아닙니다/);
   assert.match(html,/<details class="technical-details">/);assert.doesNotMatch(html,/<details class="technical-details" open/);
 });
 

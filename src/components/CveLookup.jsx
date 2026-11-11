@@ -48,7 +48,7 @@ export default function CveLookup({ lookup }) {
               ? `${id}에 해당하는 NVD 기록이 없습니다. 미등록·반영 지연 등의 가능성이 있습니다.`
               : result
                 ? `${result.id} 조회 완료`
-                : "관측된 CVE의 상세 조회를 누르거나, 알고 있는 CVE 번호를 입력하세요."}
+                : "관측된 CVE의 상세 조회를 누르거나, 알고 있는 CVE 번호를 입력해야 합니다."}
         </p>
         {error && (
           <p role="alert" className="empty-explanation">
@@ -112,7 +112,7 @@ export default function CveLookup({ lookup }) {
                 ) : (
                   <p>
                     이 항목의 구체적인 한국어 위험 설명은 아직 검토하지 않았습니다. 영어
-                    원문과 공급자 권고에서 영향 기능·환경을 확인하세요.
+                    원문과 공급자 권고에서 영향 기능·환경을 확인해야 합니다.
                   </p>
                 )}
                 <details className="technical-details">
@@ -141,7 +141,7 @@ export default function CveLookup({ lookup }) {
                 <h4>대응 방법</h4>
                 <p>
                   실제 사용하는 제품·버전·기능과 영향 조건을 비교한 뒤, 공급자가 권장하는
-                  지원 중인 수정 릴리스를 적용하세요. 버전 정보를 모르면 이 CVE의 적용
+                  지원 중인 수정 릴리스를 적용해야 합니다. 버전 정보를 모르면 이 CVE의 적용
                   여부를 판단할 수 없습니다.
                 </p>
               </>

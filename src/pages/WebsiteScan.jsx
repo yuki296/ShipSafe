@@ -47,7 +47,7 @@ export default function WebsiteScan({ scan, setPage, active = true }) {
           aria-label="검사할 웹사이트 주소"
           value={domain}
           onChange={(event) => setDomain(event.target.value)}
-          placeholder="검사할 웹사이트 주소를 입력하세요"
+          placeholder="검사할 웹사이트 주소를 입력해야 합니다"
           disabled={busy}
           required
         />
@@ -58,7 +58,7 @@ export default function WebsiteScan({ scan, setPage, active = true }) {
       </form>
       <div className="scan-status" role="status">
         <span className={busy ? "status-dot running" : "status-dot"} />
-        {status || "준비 완료! 웹사이트 주소를 입력하고 검사를 시작해 보세요."}
+        {status || "준비 완료! 웹사이트 주소를 입력하고 검사를 시작할 수 있습니다."}
       </div>
       <section className="stats-grid" aria-label="검사 결과 요약">
         <div className="stat-card blue">
@@ -158,8 +158,8 @@ export default function WebsiteScan({ scan, setPage, active = true }) {
               <span>✦</span>
               <p>
                 {network
-                  ? "공개 관측 정보를 조회했어요. 최신 서버 상태와 다를 수 있어요."
-                  : "도메인 → IP → 공개 노출 정보를 순서대로 확인해요."}
+                  ? "공개 관측 정보를 조회했습니다. 최신 서버 상태와 다를 수 있습니다."
+                  : "도메인 → IP → 공개 노출 정보를 순서대로 확인합니다."}
               </p>
             </div>
           </div>
@@ -228,7 +228,7 @@ export default function WebsiteScan({ scan, setPage, active = true }) {
             <p>
               결과가 궁금하다면
               <br />
-              <strong>아래 설명도 확인해요!</strong>
+              <strong>아래 설명도 확인합니다!</strong>
             </p>
             <Mascot color="guard" />
           </div>
@@ -241,8 +241,8 @@ export default function WebsiteScan({ scan, setPage, active = true }) {
         <button className="promo lavender" onClick={() => setPage("library")}>
           <Mascot color="purple" />
           <span>
-            <strong>라이브러리 취약점도 확인해보세요!</strong>
-            <small>패키지 이름과 버전만 입력하면 알려진 취약점을 확인할 수 있어요.</small>
+            <strong>라이브러리 취약점도 확인할 수 있습니다!</strong>
+            <small>패키지 이름과 버전만 입력하면 알려진 취약점을 확인할 수 있습니다.</small>
           </span>
           <span className="pill-link">라이브러리 검사하기 →</span>
         </button>
@@ -250,7 +250,7 @@ export default function WebsiteScan({ scan, setPage, active = true }) {
           <span className="book-icon">📚</span>
           <span>
             <strong>서비스 이용 가이드</strong>
-            <small>ShipSafe의 기능과 활용 방법을 확인해요.</small>
+            <small>ShipSafe의 기능과 활용 방법을 확인합니다.</small>
           </span>
           <Icon name="chevron" />
         </button>

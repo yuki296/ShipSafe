@@ -53,7 +53,7 @@ export function readHistory(storage) {
     const records = boundHistory(parsed);
     return { records, warning: records.length < parsed.length ? '일부 이력이 손상됐거나 저장 한도를 초과해 제외했습니다.' : '' };
   } catch {
-    return { records: [], warning: '이력을 읽지 못했습니다. 브라우저 저장소 차단 또는 저장 데이터 손상 여부를 확인해 주세요.' };
+    return { records: [], warning: '이력을 읽지 못했습니다. 브라우저 저장소 차단 또는 저장 데이터 손상 여부를 확인해야 합니다.' };
   }
 }
 export function writeHistory(storage, records) {

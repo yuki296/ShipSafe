@@ -19,8 +19,8 @@ export default function IPResultCard({ result, onCVE }) {
       </p>
       <p>
         {cdn.status === "confirmed"
-          ? "이 주소는 사이트 앞에서 접속을 대신 받아 주는 중계 서버 쪽 주소예요. 아래 연결 번호가 많아도, 실제 사이트 서버에 그만큼 문이 열려 있다는 뜻은 아니에요."
-          : "이 주소가 실제 운영 서버인지, 접속을 대신 받는 중계 서버인지는 아직 몰라요."}
+          ? "이 주소는 사이트 앞에서 접속을 대신 받아 주는 중계 서버 쪽 주소입니다. 아래 연결 번호가 많아도, 실제 사이트 서버에 그만큼 문이 열려 있다는 뜻은 아닙니다."
+          : "이 주소가 실제 운영 서버인지, 접속을 대신 받는 중계 서버인지는 아직 확인되지 않았습니다."}
       </p>
       {/* CDN이라고 판단한 근거와 공식 출처를 펼쳐 볼 수 있습니다. */}
       <details>
@@ -58,7 +58,7 @@ export default function IPResultCard({ result, onCVE }) {
         </p>
       ) : status === "no-data" ? (
         <p className="empty-explanation">
-          Shodan 공개 관측 정보 없음 (404). 포트가 닫혀 있거나 안전하다는 뜻은 아닙니다.
+          Shodan 공개 관측 정보 없음 (404). 포트가 닫혀 있거나할 가능성이 있음. 안전하다는 뜻은 아닙니다.
         </p>
       ) : (
         <>
@@ -74,8 +74,8 @@ export default function IPResultCard({ result, onCVE }) {
           <details className="technical-details">
             <summary>관측된 태그·다른 사이트 이름 보기</summary>
             <p>
-              중계 서버는 여러 사이트가 함께 써요. 여기에 다른 사이트 이름이 나와도 내
-              사이트가 바뀌거나 해킹됐다는 뜻은 아니에요.
+              중계 서버는 여러 사이트가 함께 사용합니다.
+              여기에 다른 사이트 이름이 나와도 사이트가 바뀌거나 해킹됐다는 뜻은 아닙니다.
             </p>
             <p>태그: {data.tags.join(", ") || "제공된 태그 없음"}</p>
             <p>관측 호스트명: {data.hostnames.join(", ") || "제공된 호스트명 없음"}</p>
@@ -102,10 +102,10 @@ export default function IPResultCard({ result, onCVE }) {
           </div>
           {data.vulns.length > 0 && (
             <div className="risk-guidance">
-              <h4>어떤 위험을 확인해야 하나요?</h4>
+              <h4>확인해야 할 위험</h4>
               <p>
                 {cdn.status === "confirmed"
-                  ? "CDN·프록시 IP에 CVE가 연관돼 있습니다. 이 사실만으로 원본 서버나 이 웹사이트가 위험하다고 경고할 수 없습니다. 제공자의 관측 정보인지, 실제 관리 대상의 제품·버전과 연결되는지 먼저 확인하세요."
+                  ? "CDN·프록시 IP에 CVE가 연관돼 있습니다. 이 사실만으로 원본 서버나 이 웹사이트가 위험하다고 경고할 수는 없습니다. 제공자의 관측 정보인지, 실제 관리 대상의 제품·버전과 연결되는지 먼저 확인해야 합니다."
                   : "이 IP의 서비스 정보와 공개 취약점이 연관돼 있습니다. 실제 제품·버전·설정이 CVE의 영향 조건과 일치하고 외부에서 해당 기능에 접근할 수 있다면 보안 문제가 발생할 수 있습니다. 구체적인 피해는 각 CVE 원문에서 확인해야 합니다."}
               </p>
               <p>
@@ -119,7 +119,7 @@ export default function IPResultCard({ result, onCVE }) {
             <p>
               Shodan이 이 IP에 연결한 CVE가 없습니다. CDN 뒤의 원본 서버나 사용 중인
               패키지까지 검사한 것은 아닙니다. 패키지·버전을 알고 있다면 라이브러리
-              검사를, CVE 번호를 알고 있다면 아래 상세 조회를 이용하세요.
+              검사를, CVE 번호를 알고 있다면 아래 상세 조회를 이용할 수 있습니다.
             </p>
           )}
           <p className="source-text">

@@ -68,7 +68,7 @@ export default function App() {
         <div className="sidebar-friend">
           <Mascot />
           <p>
-            안전한 웹 탐험의 시작!<small>ShipSafe가 함께할게요.</small>
+            안전한 웹 탐험의 시작!<small>ShipSafe가 함께합니다.</small>
           </p>
         </div>
         <span className="sidebar-foot">PUBLIC SECURITY · SIMPLE & SAFE</span>
@@ -81,7 +81,7 @@ export default function App() {
             <h1>{navigation.find(([id]) => id === page)?.[2]}</h1>
             <p>
               웹사이트, 네트워크, 라이브러리의 공개 보안 정보를
-              <br className="desktop-break" /> 한 곳에서 확인해요.
+              <br className="desktop-break" /> 한 곳에서 확인합니다.
             </p>
           </div>
           <div className="hero-friends" aria-hidden="true">

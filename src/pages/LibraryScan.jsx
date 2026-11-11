@@ -37,7 +37,7 @@ export default function LibraryScan({ onRecord, initialTarget = null }) {
     setError("");
     setResult(null);
     if (!name || !packageVersion || name.length > 214 || packageVersion.length > 100) {
-      setError("패키지명(214자 이하)과 버전(100자 이하)을 입력해 주세요.");
+      setError("패키지명(214자 이하)과 버전(100자 이하)을 입력해야 합니다.");
       return;
     }
     inFlight.current = true;
@@ -82,7 +82,7 @@ export default function LibraryScan({ onRecord, initialTarget = null }) {
       {initialTarget && (
         <p className="source-text">
           ‘{initialTarget.name}’ 대상을 불러왔습니다. 입력값을 확인하고 라이브러리 검사
-          버튼을 눌러 주세요.
+          버튼을 누르면 검사를 시작합니다.
         </p>
       )}
       {/* 입력창 이름·입력 예시·버튼 문구는 이 폼에서 수정합니다. */}
@@ -133,13 +133,14 @@ export default function LibraryScan({ onRecord, initialTarget = null }) {
           ? "OSV에서 알려진 취약점을 조회하고 있습니다."
           : result
             ? `${result.ecosystem} / ${result.name} (${result.version}) — 취약점 ${result.vulnerabilities.length}개`
-            : "패키지 정보와 정확한 버전을 입력해 검사를 시작해 주세요."}
+            : "패키지 정보와 정확한 버전을 입력해 검사를 시작해야 합니다."}
       </p>
       {error && <p role="alert">{error}</p>}
       {result && result.vulnerabilities.length === 0 && (
         <p>
-          해당 입력에 대해 OSV에 등록된 취약점이 없습니다. 패키지 존재 여부나 안전성을
-          보장하지는 않습니다.
+          해당 입력에 대해 OSV에 등록된 취약점이 없습니다.
+          <br />
+          패키지 존재 여부나 안전성을 보장하지는 않습니다.
         </p>
       )}
       {result?.vulnerabilities.map((vuln) => (
@@ -147,8 +148,9 @@ export default function LibraryScan({ onRecord, initialTarget = null }) {
       ))}
 
       <p className="source-text">
-        검사 요약은 검사 목록에 저장됩니다. 저장된 결과는 검사 시점의 정보이며 현재 상태를
-        보장하지 않습니다.
+        검사 요약은 검사 목록에 저장됩니다.
+        <br />
+        저장된 결과는 검사 시점의 정보이며 현재 상태를 보장하지 않습니다.
       </p>
     </section>
   );
